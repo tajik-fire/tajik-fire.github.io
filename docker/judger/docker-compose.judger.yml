@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Python judger environment
+  judger-python:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    image: devstudio-judger-python:latest
+    profiles:
+      - python
+
+  # C++ judger environment
+  judger-cpp:
+    build:
+      context: .
+      dockerfile: Dockerfile.cpp
+    image: devstudio-judger-cpp:latest
+    profiles:
+      - cpp
+
+  # Java judger environment
+  judger-java:
+    build:
+      context: .
+      dockerfile: Dockerfile.java
+    image: devstudio-judger-java:latest
+    profiles:
+      - java
+
+# Build all images: docker-compose -f docker-compose.judger.yml build
+# Build specific: docker-compose -f docker-compose.judger.yml --profile python build

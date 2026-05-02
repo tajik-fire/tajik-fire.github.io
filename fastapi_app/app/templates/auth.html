@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Authentication') }} - DevStudio{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/auth.css">
+{% endblock %}
+
+{% block body %}
+<div class="auth-container">
+  <div class="auth-tabs">
+    <button class="auth-tab active" data-tab="login">{{ _('Login') }}</button>
+    <button class="auth-tab" data-tab="register">{{ _('Register') }}</button>
+    <button class="auth-tab" data-tab="reset">{{ _('Reset Password') }}</button>
+  </div>
+
+  <div class="auth-forms">
+    <form id="login-form" class="auth-form active">
+      <h2>{{ _('Login') }}</h2>
+      <div class="form-group">
+        <label for="login-username">{{ _('Username or Email') }}</label>
+        <input type="text" id="login-username" name="login" required>
+      </div>
+      <div class="form-group">
+        <label for="login-password">{{ _('Password') }}</label>
+        <input type="password" id="login-password" name="password" required>
+      </div>
+      <button type="submit" class="btn btn--primary btn--full">{{ _('Login') }}</button>
+      <p class="auth-link"><a href="#" data-tab="reset">{{ _('Forgot password?') }}</a></p>
+    </form>
+
+    <form id="register-form" class="auth-form">
+      <h2>{{ _('Register') }}</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="register-first-name">{{ _('First Name') }}</label>
+          <input type="text" id="register-first-name" name="first_name">
+        </div>
+        <div class="form-group">
+          <label for="register-last-name">{{ _('Last Name') }}</label>
+          <input type="text" id="register-last-name" name="last_name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="register-username">{{ _('Username') }}</label>
+        <input type="text" id="register-username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="register-email">{{ _('Email') }}</label>
+        <input type="email" id="register-email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="register-password">{{ _('Password') }}</label>
+        <input type="password" id="register-password" name="password" required>
+        <small>{{ _('Min 8 chars, uppercase, lowercase, digit') }}</small>
+      </div>
+      <button type="submit" class="btn btn--primary btn--full">{{ _('Register') }}</button>
+    </form>
+
+    <form id="reset-request-form" class="auth-form">
+      <h2>{{ _('Reset Password') }}</h2>
+      <div class="form-group">
+        <label for="reset-email">{{ _('Email') }}</label>
+        <input type="email" id="reset-email" name="email" required>
+      </div>
+      <button type="submit" class="btn btn--primary btn--full">{{ _('Send Code') }}</button>
+    </form>
+
+    <form id="reset-confirm-form" class="auth-form" style="display:none;">
+      <h2>{{ _('Enter Code') }}</h2>
+      <div class="form-group">
+        <label for="reset-code">{{ _('Verification Code') }}</label>
+        <input type="text" id="reset-code" name="code" required>
+      </div>
+      <div class="form-group">
+        <label for="reset-new-password">{{ _('New Password') }}</label>
+        <input type="password" id="reset-new-password" name="new_password" required>
+      </div>
+      <button type="submit" class="btn btn--primary btn--full">{{ _('Reset Password') }}</button>
+    </form>
+
+    <form id="verify-email-form" class="auth-form" style="display:none;">
+      <h2>{{ _('Verify Email') }}</h2>
+      <p>{{ _('Enter the code sent to your email') }}</p>
+      <div class="form-group">
+        <label for="verify-code">{{ _('Verification Code') }}</label>
+        <input type="text" id="verify-code" name="code" required>
+      </div>
+      <button type="submit" class="btn btn--primary btn--full">{{ _('Verify') }}</button>
+      <button type="button" id="resend-code-btn" class="btn btn--secondary btn--full">{{ _('Resend Code') }}</button>
+    </form>
+  </div>
+
+  <div id="auth-message" class="auth-message"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/components/auth.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tabs = document.querySelectorAll('.auth-tab');
+  const forms = document.querySelectorAll('.auth-form');
+  const messageEl = document.getElementById('auth-message');
+  let resetEmail = '';
+
+  function showMessage(text, type = 'info') {
+    messageEl.textContent = text;
+    messageEl.className = `auth-message ${type}`;
+    messageEl.style.display = 'block';
+  }
+
+  function switchTab(tabName) {
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
+    forms.forEach(f => {
+      f.classList.toggle('active', f.id.startsWith(tabName.replace('reset', 'reset-')));
+      if (tabName === 'reset' && f.id === 'reset-request-form') {
+        f.style.display = 'block';
+      } else if (f.id !== 'reset-request-form' && f.id !== 'reset-confirm-form') {
+        f.style.display = f.id.startsWith(tabName) ? 'block' : 'none';
+      }
+    });
+    messageEl.style.display = 'none';
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+  });
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await auth.login({
+        login: document.getElementById('login-username').value,
+        password: document.getElementById('login-password').value
+      });
+      window.location.href = '/problems';
+    } catch (err) {
+      showMessage(err.message || 'Login failed', 'error');
+    }
+  });
+
+  document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await auth.register({
+        username: document.getElementById('register-username').value,
+        email: document.getElementById('register-email').value,
+        password: document.getElementById('register-password').value,
+        first_name: document.getElementById('register-first-name').value,
+        last_name: document.getElementById('register-last-name').value
+      });
+      resetEmail = document.getElementById('register-email').value;
+      document.getElementById('verify-email-form').style.display = 'block';
+      forms.forEach(f => { if (f.id !== 'verify-email-form') f.style.display = 'none'; });
+      showMessage('Registration successful! Check your email for verification code.', 'success');
+    } catch (err) {
+      showMessage(err.message || 'Registration failed', 'error');
+    }
+  });
+
+  document.getElementById('reset-request-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    resetEmail = document.getElementById('reset-email').value;
+    try {
+      await auth.requestPasswordReset(resetEmail);
+      document.getElementById('reset-request-form').style.display = 'none';
+      document.getElementById('reset-confirm-form').style.display = 'block';
+      showMessage('Code sent to your email', 'success');
+    } catch (err) {
+      showMessage(err.message || 'Failed to send code', 'error');
+    }
+  });
+
+  document.getElementById('reset-confirm-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await auth.resetPassword(
+        resetEmail,
+        document.getElementById('reset-code').value,
+        document.getElementById('reset-new-password').value
+      );
+      showMessage('Password reset successfully! You can now login.', 'success');
+      setTimeout(() => switchTab('login'), 2000);
+    } catch (err) {
+      showMessage(err.message || 'Failed to reset password', 'error');
+    }
+  });
+
+  document.getElementById('verify-email-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await auth.confirmEmail(resetEmail, document.getElementById('verify-code').value);
+      showMessage('Email verified! Redirecting to login...', 'success');
+      setTimeout(() => {
+        switchTab('login');
+        document.getElementById('verify-email-form').style.display = 'none';
+        forms.forEach(f => { if (f.id === 'login-form') f.style.display = 'block'; });
+      }, 2000);
+    } catch (err) {
+      showMessage(err.message || 'Invalid code', 'error');
+    }
+  });
+
+  document.getElementById('resend-code-btn').addEventListener('click', async () => {
+    try {
+      await auth.resendCode(resetEmail);
+      showMessage('Code resent!', 'success');
+    } catch (err) {
+      showMessage(err.message || 'Failed to resend', 'error');
+    }
+  });
+
+  document.querySelectorAll('[data-tab]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (!el.classList.contains('auth-tab')) {
+        e.preventDefault();
+        switchTab(el.dataset.tab);
+      }
+    });
+  });
+
+  auth.init();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Tasks') }} - DevStudio Pro{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/pages/tasks.css">
+{% endblock %}
+
+{% block body %}
+<div class="tasks-layout">
+  <header class="page-header">
+    <div class="page-header-content">
+      <h1 class="page-title">{{ _('Task Board') }}</h1>
+      <p class="page-subtitle">{{ _('Manage your tasks and track progress') }}</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn--primary" id="create-task-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        {{ _('New Task') }}
+      </button>
+    </div>
+  </header>
+
+  <div class="board-container">
+    <div class="board-columns" id="board-columns">
+      
+      <div class="column column--loading">
+        <div class="column-header">
+          <div class="skeleton skeleton--text" style="width: 120px;"></div>
+          <div class="skeleton skeleton--badge" style="width: 32px;"></div>
+        </div>
+        <div class="column-tasks">
+          <div class="skeleton skeleton--card" style="height: 120px;"></div>
+          <div class="skeleton skeleton--card" style="height: 100px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" id="task-modal" aria-hidden="true">
+  <div class="modal-overlay" data-modal-close></div>
+  <div class="modal-content modal-content--lg">
+    <header class="modal-header">
+      <h2 class="modal-title" id="modal-title">{{ _('Create Task') }}</h2>
+      <button class="modal-close" data-modal-close aria-label="{{ _('Close modal') }}">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </header>
+    
+    <form class="modal-form" id="task-form">
+      <div class="form-group">
+        <label for="task-title" class="form-label">{{ _('Title') }}</label>
+        <input type="text" id="task-title" class="form-input" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="task-description" class="form-label">{{ _('Description') }}</label>
+        <textarea id="task-description" class="form-input" rows="4"></textarea>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="task-column" class="form-label">{{ _('Column') }}</label>
+          <select id="task-column" class="form-select" required>
+            <option value="todo">{{ _('To Do') }}</option>
+            <option value="in-progress">{{ _('In Progress') }}</option>
+            <option value="review">{{ _('Review') }}</option>
+            <option value="done">{{ _('Done') }}</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="task-priority" class="form-label">{{ _('Priority') }}</label>
+          <select id="task-priority" class="form-select">
+            <option value="low">{{ _('Low') }}</option>
+            <option value="medium" selected>{{ _('Medium') }}</option>
+            <option value="high">{{ _('High') }}</option>
+            <option value="urgent">{{ _('Urgent') }}</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="task-assignee" class="form-label">{{ _('Assignee') }}</label>
+        <select id="task-assignee" class="form-select">
+          <option value="">{{ _('Unassigned') }}</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="task-due-date" class="form-label">{{ _('Due Date') }}</label>
+        <input type="date" id="task-due-date" class="form-input">
+      </div>
+    </form>
+    
+    <footer class="modal-footer">
+      <button type="button" class="btn btn--secondary" data-modal-close>{{ _('Cancel') }}</button>
+      <button type="submit" form="task-form" class="btn btn--primary">{{ _('Save Task') }}</button>
+    </footer>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/components/modal.js"></script>
+<script src="/static/js/components/tasks.js"></script>
+{% endblock %}

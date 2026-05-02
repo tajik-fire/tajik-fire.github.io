@@ -1,0 +1,10 @@
+{
+  "problem_id": "Two_Sums",
+  "time_limit": 2000,
+  "memory_limit": 512,
+  "input_file": "",
+  "output_file": "",
+  "tags": ["array", "hash-table", "beginner"],
+  "difficulty": 2,
+  "author": "admin"
+}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новости - DevStudio Pro</title>
+    <link rel="stylesheet" href="/static/css/variables.css">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/utilities.css">
+    <link rel="stylesheet" href="/static/css/components/button.css">
+    <link rel="stylesheet" href="/static/css/components/input.css">
+    <link rel="stylesheet" href="/static/css/pages/news.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="/" class="logo">DevStudio Pro</a>
+            <nav class="nav">
+                <a href="/problems" data-i18n="problems">Задачи</a>
+                <a href="/news" data-i18n="news" class="active">Новости</a>
+                <a href="/messenger" data-i18n="messenger">Сообщения</a>
+                <a href="/auth" data-auth="logged-out" data-i18n="login">Войти</a>
+                <div data-auth="logged-in" class="user-menu">
+                    <span data-user-field="username"></span>
+                    <button onclick="auth.logout()" data-i18n="logout">Выйти</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        <h1 data-i18n="news_title">Новости</h1>
+        
+        <div class="news-filters">
+            <select id="news-category-filter">
+                <option value="all" data-i18n="all_categories">Все категории</option>
+                <option value="announcements" data-i18n="announcements">Объявления</option>
+                <option value="updates" data-i18n="updates">Обновления</option>
+                <option value="contests" data-i18n="contests">Конкурсы</option>
+                <option value="winners" data-i18n="winners">Победители</option>
+            </select>
+        </div>
+
+        <div id="news-list" class="news-list">
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p data-i18n="loading">Загрузка...</p>
+            </div>
+        </div>
+
+        <div id="news-pagination" class="pagination"></div>
+
+        <div data-auth="logged-in" class="create-news-btn-container">
+            <button id="create-news-btn" class="btn btn-primary" data-i18n="create_news">Создать новость</button>
+        </div>
+    </main>
+
+    <div id="news-modal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="news-modal-title"></h2>
+                <button class="modal-close" onclick="modal.close('news-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="news-modal-content" class="news-content"></div>
+                <div class="news-meta">
+                    <span id="news-modal-author"></span>
+                    <span id="news-modal-date"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="create-news-modal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 data-i18n="create_news">Создать новость</h2>
+                <button class="modal-close" onclick="modal.close('create-news-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="create-news-form">
+                    <div class="form-group">
+                        <label for="news-title" data-i18n="title">Заголовок</label>
+                        <input type="text" id="news-title" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="news-content" data-i18n="content">Содержание</label>
+                        <textarea id="news-content" rows="10" required class="form-control"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" data-i18n="create">Создать</button>
+                        <button type="button" class="btn btn-secondary" onclick="modal.close('create-news-modal')" data-i18n="cancel">Отмена</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 DevStudio Pro. <span data-i18n="all_rights_reserved">Все права защищены.</span></p>
+        </div>
+    </footer>
+
+    <script src="/static/js/i18n.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/components/modal.js"></script>
+    <script src="/static/js/components/toast.js"></script>
+    <script src="/static/js/components/auth.js"></script>
+    <script src="/static/js/components/news.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await auth.init();
+            await i18n.init();
+            newsManager.init();
+        });
+    </script>
+</body>
+</html>

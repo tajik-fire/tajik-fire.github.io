@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="navigation.learning">Learning</title>
+    <link rel="stylesheet" href="/static/css/variables.css">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/components/card.css">
+    <link rel="stylesheet" href="/static/css/components/button.css">
+    <link rel="stylesheet" href="/static/css/components/modal.css">
+    <link rel="stylesheet" href="/static/css/components/toast.css">
+    <link rel="stylesheet" href="/static/css/components/navigation.css">
+    <link rel="stylesheet" href="/static/css/pages/learning.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar__container">
+            <a href="/" class="navbar__logo">CodeLearn</a>
+            <div class="navbar__menu">
+                <a href="/" class="navbar__link" data-i18n="navigation.home">Home</a>
+                <a href="/problems" class="navbar__link" data-i18n="olympiads.title">Olympiads</a>
+                <a href="/learning" class="navbar__link navbar__link--active" data-i18n="navigation.learning">Learning</a>
+                <a href="/tasks" class="navbar__link" data-i18n="navigation.tasks">Tasks</a>
+                <a href="/messenger" class="navbar__link" data-i18n="navigation.messenger">Messenger</a>
+                <a href="/news" class="navbar__link" data-i18n="navigation.news">News</a>
+            </div>
+            <div class="navbar__actions">
+                <div class="language-switcher">
+                    <button class="lang-btn" data-language-switch="tj">TJ</button>
+                    <button class="lang-btn" data-language-switch="ru">RU</button>
+                    <button class="lang-btn" data-language-switch="en">EN</button>
+                </div>
+                <div data-auth="logged-out">
+                    <a href="/login" class="btn btn--outline" data-i18n="auth.login">Sign In</a>
+                    <a href="/register" class="btn btn--primary" data-i18n="auth.register">Sign Up</a>
+                </div>
+                <div data-auth="logged-in" style="display: none;">
+                    <span class="user-greeting" data-user-field="username"></span>
+                    <button class="btn btn--outline" onclick="auth.logout()" data-i18n="navigation.logout">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1 class="page-title" data-i18n="learning.title">Learning Center</h1>
+        
+        <div class="learning-filters">
+            <input type="text" id="module-search" class="search-input" data-i18n-placeholder="learning.searchModules" placeholder="Search modules...">
+            <select id="difficulty-filter" class="filter-select">
+                <option value="all" data-i18n="learning.allLevels">All Levels</option>
+                <option value="beginner" data-i18n="learning.beginner">Beginner</option>
+                <option value="intermediate" data-i18n="learning.intermediate">Intermediate</option>
+                <option value="advanced" data-i18n="learning.advanced">Advanced</option>
+            </select>
+        </div>
+
+        <div id="modules-container" class="modules-grid">
+        </div>
+
+        <div id="module-detail-modal" class="modal">
+            <div class="modal__content modal__content--lg">
+                <div class="modal__header">
+                    <h2 id="modal-module-title" class="modal__title"></h2>
+                    <button class="modal__close" onclick="modal.close('module-detail-modal')">&times;</button>
+                </div>
+                <div class="modal__body">
+                    <div id="modal-module-description" class="module-description"></div>
+                    <div id="modal-module-theory" class="module-theory"></div>
+                    <div id="modal-module-problems" class="module-problems">
+                        <h3 data-i18n="learning.practiceProblems">Practice Problems</h3>
+                        <div id="problems-list" class="problems-list"></div>
+                    </div>
+                </div>
+                <div class="modal__footer">
+                    <button id="enroll-btn" class="btn btn--primary" data-i18n="learning.enroll">Enroll</button>
+                    <button class="btn btn--outline" onclick="modal.close('module-detail-modal')" data-i18n="common.close">Close</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/i18n.js"></script>
+    <script src="/static/js/utils/helpers.js"></script>
+    <script src="/static/js/components/toast.js"></script>
+    <script src="/static/js/components/modal.js"></script>
+    <script src="/static/js/components/auth.js"></script>
+    <script src="/static/js/components/learning.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "problem_id": "Factorial",
+  "time_limit": 1000,
+  "memory_limit": 256,
+  "input_file": "",
+  "output_file": "",
+  "tags": ["math", "recursion", "beginner"],
+  "difficulty": 1,
+  "author": "admin"
+}

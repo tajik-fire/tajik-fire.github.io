@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="{{ current_language or 'en' }}" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{% block meta_description %}Premium Developer Platform for Tasks, Learning & Collaboration{% endblock %}">
+  <meta name="theme-color" content="#09090b">
+  <title>{% block title %}DevStudio Pro{% endblock %}</title>
+  
+  
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  
+  <link rel="stylesheet" href="/static/css/variables.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/utilities.css">
+  <link rel="stylesheet" href="/static/css/components/button.css">
+  <link rel="stylesheet" href="/static/css/components/input.css">
+  <link rel="stylesheet" href="/static/css/components/card.css">
+  <link rel="stylesheet" href="/static/css/components/avatar.css">
+  <link rel="stylesheet" href="/static/css/components/modal.css">
+  <link rel="stylesheet" href="/static/css/components/toast.css">
+  <link rel="stylesheet" href="/static/css/components/navigation.css">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-primary text-primary font-sans">
+  {% block body %}
+  
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="/" class="navbar__brand">
+      <div class="navbar__logo">D</div>
+      <span class="navbar__brand-name">DevStudio</span>
+    </a>
+    
+    <div class="navbar__menu">
+      <a href="/olympiads" class="navbar__link">{{ _('Olympiads') }}</a>
+      <a href="/tasks" class="navbar__link">{{ _('Tasks') }}</a>
+      <a href="/messenger" class="navbar__link">{{ _('Messenger') }}</a>
+      <a href="/learning" class="navbar__link">{{ _('Learning') }}</a>
+    </div>
+    
+    <div class="navbar__actions">
+      {% if current_user %}
+      <a href="/profile" class="navbar__avatar-link" aria-label="Profile">
+        <img src="{{ current_user.avatar_url or '/static/avatars/default.png' }}" 
+             alt="{{ current_user.username }}" 
+             class="navbar__avatar"
+             loading="lazy">
+      </a>
+      <button id="logout-btn" class="btn btn--secondary btn--sm">{{ _('Logout') }}</button>
+      {% else %}
+      <a href="/login" class="btn btn--secondary btn--sm">{{ _('Login') }}</a>
+      <a href="/register" class="btn btn--primary btn--sm">{{ _('Register') }}</a>
+      {% endif %}
+    </div>
+  </nav>
+  
+  
+  {% block sidebar %}{% endblock %}
+  
+  
+  <main class="main-content" role="main">
+    {% block content %}{% endblock %}
+  </main>
+  {% endblock %}
+  
+  
+  <script src="/static/js/i18n.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/utils/helpers.js"></script>
+  <script src="/static/js/components/toast.js"></script>
+  <script src="/static/js/app.js"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
